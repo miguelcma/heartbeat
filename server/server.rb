@@ -4,6 +4,8 @@ require 'json'
 require 'dotenv/load'
 
 post '/heartbeat' do
+  halt(404) if params[:key] != ENV['API_KEY']
+
   time = Time.now.utc.iso8601
   File.write(ENV['HEARTBEAT_FILE_PATH'], time, mode: 'w')
 
@@ -11,6 +13,8 @@ post '/heartbeat' do
 end
 
 get '/heartbeat' do
+  halt(404) if params[:key] != ENV['API_KEY']
+
   time = Time.parse File.open(ENV['HEARTBEAT_FILE_PATH']).read
 
   { timestamp: time }.to_json
